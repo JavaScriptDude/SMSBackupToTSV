@@ -24,7 +24,7 @@ def pc(*args):
 def parseDate(sDate):
     sDate = sDate.replace('a.m.', 'AM').replace('p.m.', 'PM').replace('.', '')
     d = datetime.strptime(sDate, "%b %d, %Y %H:%M:%S %p")
-    return [d.year, d.month, d.day, d.strftime('%H:%M:%S')]
+    return d
 
 
 def fixPhone(sPhone):

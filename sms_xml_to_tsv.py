@@ -5,7 +5,7 @@
 # eg: python3 sms_xml_to_tsv.py sms-20200917002015.xml
 # .: Other :.
 # Author: Timothy C. Quinn
-# Home: <tbd>
+# Home: https://github.com/JavaScriptDude/SMSBackupToTSV
 # Licence: https://opensource.org/licenses/MIT
 #########################################
 import os, csv, traceback, sys
@@ -22,7 +22,7 @@ def main(argv):
         sFilePrefix = sFile
 
         # First lets write SMS
-        aColumns = ['type', 'year', 'mon', 'day', 'time', 'contact', 'phone', 'dir', 'body']
+        aColumns = ['type', 'year', 'mon', 'day', 'time', 'contact', 'phone', 'dir', 'body', 'timestamp']
 
         out_fname = 'z_{}.tsv'.format(sFilePrefix)
             
@@ -45,15 +45,17 @@ def main(argv):
                 raise Exception("Unexpected type {} in xml: {}".format(iType, smr.dump(m)))
 
             sPhone = smr.fixPhone(smr.aget("m", m, 'address', req=True))
+
+            d = smr.parseDate(smr.aget("m", m, 'readable_date', req=True))
             
             rows.append([
                  'sms'
-                ,*smr.parseDate(smr.aget("m", m, 'readable_date', req=True))
+                ,d.year, d.month, d.day, d.strftime('%H:%M:%S')
                 ,smr.aget("m", m, 'contact_name', req=True)
                 ,sPhone
                 ,sType
                 ,smr.aget("m", m, 'body', req=True)
-                
+                ,d.strftime('%y%m%d-%H%M%S')
             ])
 
         pc("sms records found: {}", iC)
@@ -77,14 +79,16 @@ def main(argv):
                 if iSeq == 0:
                     sMsg = smr.aget("part", part, 'text', req=True)
 
-            
+            d = smr.parseDate(smr.aget("m", m, 'readable_date', req=True))
+
             rows.append([
                  'mms'
-                ,*smr.parseDate(smr.aget("m", m, 'readable_date', req=True))
+                ,d.year, d.month, d.day, d.strftime('%H:%M:%S')
                 ,smr.aget("m", m, 'contact_name', req=True)
                 ,sPhone
                 ,sType
                 ,sMsg
+                ,d.strftime('%y%m%d-%H%M%S')
             ])
 
         pc("mms records found: {}", iC)
