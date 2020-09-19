@@ -13,9 +13,14 @@ from xml.etree.ElementTree import parse as parse_xml
 import common as smr
 pc = smr.pc
 
+def test(sDate):
+    sDate = sDate.replace('a.m.', 'AM').replace('p.m.', 'PM').replace('.', '').replace(',', '')
+    
+    d = datetime.strptime(sDate, "%b %d, %Y %H:%M:%S %p")
+
 def main(argv):
 
-    try:
+    try:        
 
         (sFile) = smr.loadArgs(argv, 'calls')
 
@@ -41,7 +46,7 @@ def main(argv):
             iC = iC + 1
             # pc('type(m) = {}', type(m))
             # pc('m = {}', smr.dump(m, True))
-
+ 
             iType = smr.aget("m", m, 'type', req=True, toint=True)
             if iType == 1:
                 sType = "1"
@@ -56,7 +61,8 @@ def main(argv):
 
             sPhone = smr.fixPhone(smr.aget("m", m, 'number', req=True))
 
-            d = smr.parseDate(smr.aget("m", m, 'readable_date', req=True))
+            d = smr.dateFromTimestamp(smr.aget("m", m, 'date', req=True))
+
             
             rows.append([
                  d.year, d.month, d.day, d.strftime('%H:%M:%S')

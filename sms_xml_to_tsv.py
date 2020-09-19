@@ -46,7 +46,7 @@ def main(argv):
 
             sPhone = smr.fixPhone(smr.aget("m", m, 'address', req=True))
 
-            d = smr.parseDate(smr.aget("m", m, 'readable_date', req=True))
+            d = smr.dateFromTimestamp(smr.aget("m", m, 'date', req=True))
             
             rows.append([
                  'sms'
@@ -62,6 +62,7 @@ def main(argv):
 
         iC = 0
         for m in smses.findall('mms'):
+            iC = iC + 1
             # pc('type(m) = {}', type(m))
             # pc('m = {}', smr.dump(m, True))
             iType = smr.aget("m", m, 'type', req=True, toint=True)
@@ -79,7 +80,7 @@ def main(argv):
                 if iSeq == 0:
                     sMsg = smr.aget("part", part, 'text', req=True)
 
-            d = smr.parseDate(smr.aget("m", m, 'readable_date', req=True))
+            d = smr.dateFromTimestamp(smr.aget("m", m, 'date', req=True))
 
             rows.append([
                  'mms'

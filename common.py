@@ -1,10 +1,9 @@
-import os
+import os, sys
 from datetime import datetime
 from pprint import pformat as pf
 
 
 def exit(s=None, exitCode=1):
-    pc('exit() called from: {}'.format(getCaller()))
     if not s is None:
         pc('Message: {}'.format(s))
     pc('exiting program ~')
@@ -20,11 +19,14 @@ def pc(*args):
         i = i + 1
     print(a[0] if i == 1 else a[0].format(*a[1:]))
 
+def dateFromTimestamp(unix_time_ms):
+    unix_time_ms = int(unix_time_ms)
+    return datetime.fromtimestamp(unix_time_ms/1000)
 
 def parseDate(sDate):
     sDate = sDate.replace('a.m.', 'AM').replace('p.m.', 'PM').replace('.', '')
     d = datetime.strptime(sDate, "%b %d, %Y %H:%M:%S %p")
-    return d
+    return d 
 
 
 def fixPhone(sPhone):
